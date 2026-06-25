@@ -1,8 +1,7 @@
 // Direction Tests.swift
 
-import Testing
-
 import Direction_Primitives
+import Testing
 
 // MARK: - Direction - Static Functions
 
@@ -80,5 +79,30 @@ struct `Direction - Protocol Conformances` {
     func `Hashable produces unique hashes`() {
         let set: Set<Direction> = [.positive, .negative, .positive]
         #expect(set.count == 2)
+    }
+}
+
+// MARK: - Direction - Comparison
+
+@Suite
+struct `Direction - Comparison` {
+    @Test
+    func `negative precedes positive`() {
+        #expect(Direction.negative < Direction.positive)
+        #expect(Direction.positive > Direction.negative)
+        #expect(!(Direction.positive < Direction.negative))
+    }
+
+    @Test
+    func `comparison agrees with sign`() {
+        #expect(
+            (Direction.negative < Direction.positive)
+                == (Direction.negative.sign < Direction.positive.sign)
+        )
+    }
+
+    @Test
+    func `sorting orders negative first`() {
+        #expect([Direction.positive, Direction.negative].sorted() == [.negative, .positive])
     }
 }

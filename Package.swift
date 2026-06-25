@@ -17,6 +17,20 @@ let package = Package(
             targets: ["Direction Primitive"]
         ),
 
+        // MARK: - Sub-namespace targets
+        .library(
+            name: "Direction Equation Primitives",
+            targets: ["Direction Equation Primitives"]
+        ),
+        .library(
+            name: "Direction Hash Primitives",
+            targets: ["Direction Hash Primitives"]
+        ),
+        .library(
+            name: "Direction Comparison Primitives",
+            targets: ["Direction Comparison Primitives"]
+        ),
+
         // MARK: - Umbrella
         .library(
             name: "Direction Primitives",
@@ -29,12 +43,39 @@ let package = Package(
             targets: ["Direction Primitives Test Support"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/swift-primitives/swift-equation-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-hash-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-comparison-primitives.git", branch: "main"),
+    ],
     targets: [
-        // MARK: - Namespace
+        // MARK: - Namespace (zero external dependencies — [MOD-017])
         .target(
             name: "Direction Primitive",
             dependencies: []
+        ),
+
+        // MARK: - Sub-namespace targets (per [MOD-031]): institute Equatable/Hashable/Comparable twins
+        .target(
+            name: "Direction Equation Primitives",
+            dependencies: [
+                "Direction Primitive",
+                .product(name: "Equation Primitives", package: "swift-equation-primitives"),
+            ]
+        ),
+        .target(
+            name: "Direction Hash Primitives",
+            dependencies: [
+                "Direction Primitive",
+                .product(name: "Hash Primitives", package: "swift-hash-primitives"),
+            ]
+        ),
+        .target(
+            name: "Direction Comparison Primitives",
+            dependencies: [
+                "Direction Primitive",
+                .product(name: "Comparison Primitives", package: "swift-comparison-primitives"),
+            ]
         ),
 
         // MARK: - Umbrella
@@ -42,6 +83,9 @@ let package = Package(
             name: "Direction Primitives",
             dependencies: [
                 "Direction Primitive",
+                "Direction Equation Primitives",
+                "Direction Hash Primitives",
+                "Direction Comparison Primitives",
             ]
         ),
 
